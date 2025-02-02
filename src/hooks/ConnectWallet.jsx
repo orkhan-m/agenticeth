@@ -1,3 +1,5 @@
+import styles from "./ConnectWallet.module.css";
+
 import {
   useConnect,
   useAccount,
@@ -9,14 +11,22 @@ import {
 export function ConnectWallet() {
   const { isConnected } = useAccount();
   if (isConnected) return <Account />;
-  return <WalletOptions />;
+  return (
+    <>
+      <WalletOptions />
+    </>
+  );
 }
 
 export function WalletOptions() {
   const { connectors, connect } = useConnect();
 
   return connectors.map((connector) => (
-    <button key={connector.uid} onClick={() => connect({ connector })}>
+    <button
+      className={styles.btn}
+      key={connector.uid}
+      onClick={() => connect({ connector })}
+    >
       {connector.name}
     </button>
   ));
@@ -30,9 +40,16 @@ export function Account() {
 
   return (
     <div>
-      {ensAvatar && <img alt="ENS Avatar" src={ensAvatar} />}
-      {address && <div>{ensName ? `${ensName} (${address})` : address}</div>}
-      <button onClick={() => disconnect()}>Disconnect</button>
+      {/* {ensAvatar && <img alt="ENS Avatar" src={ensAvatar} />} */}
+      {/* {address && <div>{ensName ? `${ensName} (${address})` : address}</div>} */}
+      <button className={styles.btn} onClick={() => disconnect()}>
+        Disconnect
+      </button>
     </div>
   );
+}
+
+export function AccountAddress() {
+  const { address } = useAccount();
+  return <div className={styles.accountBox}>{address}</div>;
 }

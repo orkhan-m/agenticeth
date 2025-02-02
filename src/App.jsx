@@ -7,8 +7,6 @@ import { WagmiProvider } from "wagmi";
 import { config } from "./wagmiConfig.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { ConnectWallet } from "./hooks/ConnectWallet";
-
 const queryClient = new QueryClient();
 
 export function App() {
@@ -16,8 +14,9 @@ export function App() {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Route index path="/" element={<Homepage />} />
-          <ConnectWallet />
+          <Routes>
+            <Route index path="/" element={<Homepage />} />
+          </Routes>
         </BrowserRouter>
       </QueryClientProvider>
     </WagmiProvider>
