@@ -1,4 +1,4 @@
-.btn {
+.defaultBtn {
   border: 0.1rem solid #c0c0c0;
   color: black;
   padding: 10px 20px;
@@ -13,21 +13,7 @@
   background-color: #ffffff;
 }
 
-.btn:hover {
+.defaultBtn:hover {
   box-shadow: 0.1rem 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
   background-color: #eeeeee;
-}
-
-.accountBox {
-  background-color: #ffffff;
-  color: black;
-
-  font-size: 1.2rem;
-
-  border-radius: 1rem;
-  box-shadow: 0.1rem 0.1rem 0.5rem #777777;
-
-  margin-top: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
 }
