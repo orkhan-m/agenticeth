@@ -17,3 +17,12 @@
   box-shadow: 0.1rem 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
   background-color: #eeeeee;
 }
+
+.defaultBtn:disabled {
+  background-color: #f0f0f0; /* A lighter background */
+  color: #a0a0a0; /* A muted text color */
+  border: 0.1rem solid #d0d0d0; /* A lighter border */
+  cursor: not-allowed; /* Change the cursor to indicate non-interactivity */
+  box-shadow: none; /* Remove any shadow effects */
+  opacity: 0.6; /* Optionally reduce opacity for extra clarity */
+}

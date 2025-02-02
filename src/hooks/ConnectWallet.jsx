@@ -51,6 +51,8 @@ export function Account() {
 
 export function AccountAddress() {
   const { address } = useAccount();
+  console.log(address);
+
   return (
     address && (
       <div className={styles.accountBox}>
