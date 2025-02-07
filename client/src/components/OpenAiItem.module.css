@@ -1,0 +1,48 @@
+.generateCollectionContainer {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 105rem;
+  height: 75rem;
+
+  background-color: #efefef;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+
+  border: 0.1rem solid #e0e0e0;
+}
+
+.inputContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.inputNftHero {
+  width: 30rem;
+}
+
+.inputNftFeatures {
+  width: 30rem;
+}
+
+.inputNftNumber {
+  width: 30rem;
+}
+
+.selectNftNumber {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  height: 3.45rem;
+  width: 30rem;
+}
+
+.selectNftNumber label {
+  font-weight: 500;
+
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+}
