@@ -47,14 +47,53 @@
   align-items: center;
 }
 
-.buttonContainer {
+.baseImageContainer {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+
+  /* justify-content: center; */
+  margin-top: 2rem;
+
+  height: 25rem;
+}
+
+.baseImageAndLabel {
+  display: flex;
+  flex-direction: column;
+
+  height: 26rem;
+  width: 21rem;
+}
+
+.baseImage {
+  width: 21rem;
+  height: 21rem;
+  /* margin-left: auto;
+  margin-right: auto; */
+}
+
+.generateBaseButtonAndFeatures {
+  display: flex;
+  flex-direction: column;
+
+  height: 26rem;
+  width: 21rem;
+}
+
+.featureListed {
+  list-style: none;
+  font-size: 1.2rem;
+}
+
+.generateButtonContainer {
   display: flex;
   justify-content: center;
   margin-top: 5rem;
 }
 
 .cardCanvasTitle {
-  margin-top: 4rem;
+  /* margin-top: 4rem; */
   margin-left: auto;
   margin-right: auto;
   width: 25rem;
@@ -69,7 +108,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
 
   gap: 1rem;
 }
