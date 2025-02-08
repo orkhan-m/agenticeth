@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import NftCard from "./nftCard";
 import Button from "./Button";
 import { useAll } from "../contexts/AllContext";
+import axios from "axios";
 
 export default function OpenAiItem() {
   const [imageUrl, setImageUrl] = useState("");
@@ -12,6 +13,15 @@ export default function OpenAiItem() {
   const [nftAmount, setNftAmount] = useState(2);
 
   const { logIn } = useAll();
+
+  const fetchAPI = async () => {
+    const response = await axios.get("http://localhost:8080/api");
+    console.log(response.data.fruits);
+  };
+
+  useEffect(() => {
+    fetchAPI();
+  }, []);
 
   // async function sendRequest() {
   //   const openai = new OpenAI({
@@ -40,19 +50,19 @@ export default function OpenAiItem() {
       dangerouslyAllowBrowser: true,
     });
 
-    const response = await openai.images.generate({
-      model: "dall-e-2",
-      prompt: `Create a simple ${nftHero} character with a neutral background.`,
-      n: 1,
-      size: "512x512",
-    });
+    try {
+      const response = await openai.images.generate({
+        model: "dall-e-2",
+        prompt: `Create a simple ${nftHero} character with a neutral background.`,
+        n: 1,
+        size: "512x512",
+      });
 
-    console.log("Response:");
-    console.log(response);
-    console.log("Response data:");
-    console.log(response.data);
-    let imgUrl = response.data[0].url;
-    setImageUrl(imgUrl);
+      let imgUrl = await response.data[0].url;
+      setImageUrl(imgUrl);
+    } catch {
+      alert("Failed to generate image. Please try again.");
+    }
   }
 
   async function downloadImage(url) {
