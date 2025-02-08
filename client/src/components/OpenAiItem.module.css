@@ -1,7 +1,7 @@
 .generateCollectionContainer {
   margin-left: auto;
   margin-right: auto;
-  max-width: 105rem;
+  max-width: 115rem;
   height: 75rem;
 
   background-color: #efefef;
@@ -45,4 +45,31 @@
   display: inline-flex;
   gap: 0.3rem;
   align-items: center;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
+
+.cardCanvasTitle {
+  margin-top: 4rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25rem;
+
+  font-size: 3rem;
+  color: #707070;
+}
+
+.cardCanvas {
+  background-color: red;
+  height: 40rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+
+  gap: 1rem;
 }

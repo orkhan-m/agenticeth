@@ -1,0 +1,9 @@
+.cardBody {
+  display: flex;
+  flex-direction: column;
+
+  width: 21rem;
+  height: 30rem;
+
+  background-color: blue;
+}
