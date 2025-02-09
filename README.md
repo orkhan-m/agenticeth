@@ -24,3 +24,12 @@ cd server
 npm i
 npm run dev
 ```
+
+##### Client .env:
+
+VITE_OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+
+##### Server .env:
+
+PINATA_API_KEY=YOUR_PINATA_API_KEY
+PINATA_SECRET_KEY=YOUR_PINATA_SECRET_KEY

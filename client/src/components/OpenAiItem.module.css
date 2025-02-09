@@ -55,29 +55,22 @@
   /* justify-content: center; */
   margin-top: 2rem;
 
-  height: 25rem;
+  height: 20rem;
 }
 
 .baseImageAndLabel {
   display: flex;
   flex-direction: column;
 
-  height: 26rem;
+  height: 15rem;
   width: 21rem;
-}
-
-.baseImage {
-  width: 21rem;
-  height: 21rem;
-  /* margin-left: auto;
-  margin-right: auto; */
 }
 
 .generateBaseButtonAndFeatures {
   display: flex;
   flex-direction: column;
 
-  height: 26rem;
+  height: 20rem;
   width: 21rem;
 }
 
@@ -103,7 +96,6 @@
 }
 
 .cardCanvas {
-  background-color: red;
   height: 40rem;
   display: flex;
   justify-content: center;
