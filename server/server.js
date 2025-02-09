@@ -1,45 +1,58 @@
-// index.js
 import express from "express";
-// import mongoose from "mongoose";
-import dotenv from "dotenv";
+import axios from "axios";
+import fs from "fs";
+import path from "path";
 import cors from "cors";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const corsOptions = {
-  origin: ["http://localhost:5173"], // receive requests from this origin only
-};
-app.use(cors(corsOptions)); // add this line before defining routes
-dotenv.config(); // Load environment variables
+app.use(cors());
 
-app.get("/api", (req, res) => {
-  res.json({ fruits: ["apple", "banana", "cherry"] });
+app.get("/download", async (req, res) => {
+  try {
+    const imageUrl = req.query.url;
+    if (!imageUrl) {
+      return res.status(400).json({ error: "Missing image URL" });
+    }
+
+    const timestamp = Date.now();
+    const fileName = `image_${timestamp}.png`;
+    const imagesDir = path.join(__dirname, "images");
+
+    if (!fs.existsSync(imagesDir)) {
+      fs.mkdirSync(imagesDir, { recursive: true });
+    }
+
+    const filePath = path.join(imagesDir, fileName);
+
+    const response = await axios({
+      method: "get",
+      url: imageUrl,
+      responseType: "stream",
+    });
+
+    const writer = fs.createWriteStream(filePath);
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+      writer.on("finish", () => {
+        res.json({
+          success: true,
+          message: "Image downloaded successfully",
+          path: filePath,
+        });
+        resolve();
+      });
+      writer.on("error", reject);
+    });
+  } catch (error) {
+    console.error("Download error:", error);
+    res.status(500).json({ error: "Failed to download image" });
+  }
 });
 
-app.listen(8080, () => {
-  console.log("Server running on port 8080");
-});
-
-// // Middleware: parse JSON bodies and handle CORS
-// app.use(express.json());
-// app.use(cors());
-
-// // server.js (add after middleware setup)
-// import itemsRouter from "./routes/items.js";
-// app.use("/api/items", itemsRouter);
-
-// // Connect to MongoDB using Mongoose
-// mongoose
-//   .connect(process.env.MONGO_URI)
-//   .then(() => {
-//     console.log("Connected to MongoDB");
-
-//     // Start the server only after successful DB connection
-//     const PORT = process.env.PORT || 5000;
-//     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-//   })
-//   .catch((error) => console.error("Error connecting to MongoDB:", error));
-
-// // Example route
-// app.get("/", (req, res) => {
-//   res.send("Hello from Express!");
-// });
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

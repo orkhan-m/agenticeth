@@ -6,9 +6,10 @@ import Button from "./Button";
 import Spinner from "./Spinner";
 import { useAll } from "../contexts/AllContext";
 import axios from "axios";
+import supabase from "../../supabase-client";
 
 export default function OpenAiItem() {
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
   const [nftHero, setNftHero] = useState("");
   const [nftFeature, setNftFeature] = useState("");
   const [nftAmount, setNftAmount] = useState(2);
@@ -18,36 +19,6 @@ export default function OpenAiItem() {
 
   const { logIn } = useAll();
 
-  const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:8080/api");
-    console.log(response.data.fruits);
-  };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
-
-  // async function sendRequest() {
-  //   const openai = new OpenAI({
-  //     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  //     dangerouslyAllowBrowser: true,
-  //   });
-
-  //   const completion = await openai.chat.completions.create({
-  //     model: "gpt-4o-mini",
-  //     messages: [
-  //       { role: "system", content: "You are a helpful assistant." },
-  //       {
-  //         role: "user",
-  //         content: "Write a haiku about recursion in programming.",
-  //       },
-  //     ],
-  //     store: true,
-  //   });
-  //   console.log(completion.choices[0].message);
-  //   return completion.choices[0].message;
-  // }
-
   async function generateImage() {
     const openai = new OpenAI({
       apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -56,25 +27,47 @@ export default function OpenAiItem() {
 
     try {
       setIsImageLoading(true);
-      const response = await openai.images.generate({
-        model: "dall-e-2",
-        prompt: `${nftHero}, digital non fungable token portrait -
-        plain colors, and no accessories,
-        set against a minimalist background.
-        There should be no text or lettering in the image.`,
-        n: 1,
-        size: "512x512",
-      });
-      const imgUrl = await response.data[0].url;
-      setImageUrl(imgUrl);
-    } catch {
-      alert("Failed to generate image. Please try again.");
+      const imgUrls = [];
+      for (const feature of listFeatures) {
+        const response = await openai.images.generate({
+          model: "dall-e-2",
+          prompt: `Picture ${nftHero}, digital NFT portrait – 
+          hyper-stylized cartoon with bold outlines, 
+          vibrant colors, and trendy accessories with the features of ${feature}., 
+          set against a minimalist background.`,
+          n: 1,
+          size: "512x512",
+        });
+        const imgUrl = response.data[0].url;
+        imgUrls.push(imgUrl);
+
+        // Download image
+        try {
+          const downloadResponse = await axios.get(
+            `http://localhost:3001/download?url=${encodeURIComponent(imgUrl)}`
+          );
+          console.log(`Image ${feature} downloaded:`, downloadResponse.data);
+        } catch (error) {
+          console.error(`Error downloading image ${feature}:`, error);
+        }
+      }
+      setImageUrls(imgUrls);
+    } catch (error) {
+      console.error("Failed to generate images:", error);
+      alert("Failed to generate images. Please try again.");
     } finally {
       setIsImageLoading(false);
     }
+  }
+
+  async function generateFeatures() {
+    const openai = new OpenAI({
+      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
+    });
 
     try {
-      setIsFeaturesLoading(false);
+      setIsFeaturesLoading(true);
 
       const completion = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -108,15 +101,9 @@ export default function OpenAiItem() {
         ],
         store: true,
       });
-
       const features = completion.choices[0].message.content;
       const featureAdjusted = features.slice(0, -1);
       const parsedFeatures = JSON.parse(featureAdjusted);
-
-      console.log(features);
-      console.log(featureAdjusted);
-      console.log(parsedFeatures);
-
       setListFeatures(parsedFeatures);
     } catch {
       alert("Failed to generate features list. Please try again.");
@@ -125,16 +112,6 @@ export default function OpenAiItem() {
     }
   }
 
-  async function downloadImage(url) {
-    const image = await fetch(url);
-  }
-
-  // useEffect(() => {
-  //   generateImage();
-  // }, []);
-
-  // sendRequest();
-  // generateImage();
   function handleSubmit(e) {
     e.preventDefault();
   }
@@ -212,24 +189,12 @@ export default function OpenAiItem() {
         </div>
       </form>
       <div className={styles.baseImageContainer}>
-        <div className={styles.baseImageAndLabel}>
-          <label>Base Image</label>
-          {isImageLoading ? (
-            <Spinner />
-          ) : (
-            <img
-              className={styles.baseImage}
-              src={imageUrl ? imageUrl : "/placeholder.jpg"}
-              alt="Base Image"
-            />
-          )}
-        </div>
         <div className={styles.generateBaseButtonAndFeatures}>
           <Button
             isDisabled={!(logIn && nftHero !== "" && nftFeature !== "")}
-            handleClick={generateImage}
+            handleClick={generateFeatures}
           >
-            Generate Base Image
+            Generate Features
           </Button>
           <label>Features:</label>
           {isFeaturesLoading ? (
@@ -243,7 +208,7 @@ export default function OpenAiItem() {
                   </li>
                 ))
               ) : (
-                <li></li>
+                <li className={styles.featureListed}></li>
               )}
             </ul>
           )}
@@ -259,18 +224,12 @@ export default function OpenAiItem() {
       </div>
       <h2 className={styles.cardCanvasTitle}>NFT Workspace</h2>
       <div className={styles.cardCanvas}>
-        <NftCard imageUrl="1.png" />
-        <NftCard imageUrl="2.png" />
-        <NftCard imageUrl="2.png" />
-        <NftCard imageUrl="3.png" />
-        <NftCard imageUrl="3.png" />
+        {isImageLoading ? (
+          <Spinner />
+        ) : (
+          imageUrls.map((url, index) => <NftCard key={index} imageUrl={url} />)
+        )}
       </div>
-
-      {/* {imageUrl ? (
-        <img src={imageUrl} alt="Generated by OpenAI" />
-      ) : (
-        <p>Loading...</p>
-      )} */}
     </div>
   );
 }
