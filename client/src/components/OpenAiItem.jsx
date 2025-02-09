@@ -32,13 +32,13 @@ export default function OpenAiItem() {
 
       for (const feature of listFeatures) {
         const response = await openai.images.generate({
-          model: "dall-e-3",
+          model: "dall-e-2",
           prompt: `Picture ${nftHero}, digital NFT portrait – 
           hyper-stylized cartoon with bold outlines, 
           vibrant colors, and trendy accessories with the features of ${feature}., 
           set against a minimalist background.`,
-          // n: 1,
-          size: "1024x1024",
+          n: 1,
+          size: "512x512",
         });
         const imgUrl = response.data[0].url;
         imgUrls.push(imgUrl);
