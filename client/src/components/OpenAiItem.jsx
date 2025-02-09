@@ -28,6 +28,8 @@ export default function OpenAiItem() {
     try {
       setIsImageLoading(true);
       const imgUrls = [];
+      const ipfsUrls = [];
+
       for (const feature of listFeatures) {
         const response = await openai.images.generate({
           model: "dall-e-2",
@@ -41,17 +43,27 @@ export default function OpenAiItem() {
         const imgUrl = response.data[0].url;
         imgUrls.push(imgUrl);
 
-        // Download image
         try {
           const downloadResponse = await axios.get(
             `http://localhost:3001/download?url=${encodeURIComponent(imgUrl)}`
           );
           console.log(`Image ${feature} downloaded:`, downloadResponse.data);
+
+          // Store IPFS URL
+          if (downloadResponse.data.ipfsUrl) {
+            ipfsUrls.push({
+              feature,
+              url: downloadResponse.data.ipfsUrl,
+              hash: downloadResponse.data.ipfsHash,
+            });
+          }
         } catch (error) {
           console.error(`Error downloading image ${feature}:`, error);
         }
       }
       setImageUrls(imgUrls);
+      // You can store or use ipfsUrls array as needed
+      console.log("IPFS URLs:", ipfsUrls);
     } catch (error) {
       console.error("Failed to generate images:", error);
       alert("Failed to generate images. Please try again.");
